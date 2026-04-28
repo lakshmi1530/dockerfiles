@@ -1,364 +1,75 @@
-# 🐳 Docker Complete Cheat Sheet (Install + Commands + Disk Management)
-
-A quick reference guide covering Docker installation, Dockerfile instructions, commands, and disk cleanup.
+# 🐳 Docker Cheat Sheet (Table Format)
 
 ---
 
-# ⚙️ Docker Installation
+## ⚙️ Docker Installation
 
-## 🐧 Install Docker on Linux (Amazon Linux / RHEL / CentOS)
+| Step              | Command                         | Description             |
+| ----------------- | ------------------------------- | ----------------------- |
+| Update system     | `sudo yum update -y`            | Updates packages        |
+| Install Docker    | `sudo yum install -y docker`    | Installs Docker engine  |
+| Start Docker      | `sudo systemctl start docker`   | Starts Docker service   |
+| Enable Docker     | `sudo systemctl enable docker`  | Auto-start on boot      |
+| Add user to group | `sudo usermod -aG docker $USER` | Run Docker without sudo |
+| Verify            | `docker --version`              | Check installation      |
 
-```bash
-sudo yum update -y
-sudo yum install -y docker
-```
-
-➡️ Installs Docker engine
-
-```bash
-sudo systemctl start docker
-sudo systemctl enable docker
-```
-
-➡️ Starts and enables Docker service
-
-```bash
-sudo usermod -aG docker $USER
-```
-
-➡️ Allows running Docker without sudo (re-login required)
-
-```bash
-docker --version
-```
-
-# 📦 Dockerfile Instructions
-
-### `FROM`
-
-```dockerfile
-FROM nginx:1.29.8
-```
-
-➡️ Base image
 
 ---
 
-### `RUN`
+## 📦 Dockerfile Instructions
 
-```dockerfile
-RUN apt-get update && apt-get install -y curl
-```
-
-➡️ Executes commands during build
-
----
-
-### `COPY`
-
-```dockerfile
-COPY todo/ /usr/share/nginx/html/
-```
-
-➡️ Copies files into container
-
----
-
-### `ADD`
-
-```dockerfile
-ADD app.tar.gz /app/
-```
-
-➡️ COPY + extract/archive support
+| Instruction | Example                            | Description           |
+| ----------- | ---------------------------------- | --------------------- |
+| FROM        | `FROM nginx:1.29.8`                | Base image            |
+| RUN         | `RUN apt-get install -y curl`      | Execute build command |
+| COPY        | `COPY app/ /app/`                  | Copy files            |
+| ADD         | `ADD file.tar.gz /app/`            | Copy + extract        |
+| WORKDIR     | `WORKDIR /app`                     | Set working directory |
+| EXPOSE      | `EXPOSE 80`                        | Define port           |
+| CMD         | `CMD ["nginx","-g","daemon off;"]` | Default command       |
+| ENTRYPOINT  | `ENTRYPOINT ["python3","app.py"]`  | Main command          |
+| ENV         | `ENV ENV=prod`                     | Set env variable      |
+| ARG         | `ARG VERSION=1`                    | Build-time variable   |
+| LABEL       | `LABEL owner=me`                   | Metadata              |
+| USER        | `USER nginx`                       | Run as user           |
+| VOLUME      | `VOLUME /data`                     | Persistent storage    |
 
 ---
 
-### `WORKDIR`
+## 🚀 Docker Commands
 
-```dockerfile
-WORKDIR /app
-```
-
-➡️ Sets working directory
-
----
-
-### `EXPOSE`
-
-```dockerfile
-EXPOSE 80
-```
-
-➡️ Documents container port
+| Action           | Command                           | Description             |
+| ---------------- | --------------------------------- | ----------------------- |
+| Build image      | `docker build -t my-app .`        | Create image            |
+| Run container    | `docker run -d -p 8080:80 my-app` | Start container         |
+| List running     | `docker ps`                       | Show running containers |
+| List all         | `docker ps -a`                    | Show all containers     |
+| Logs             | `docker logs <id>`                | View logs               |
+| Exec             | `docker exec -it <id> /bin/bash`  | Access container        |
+| Stop             | `docker stop <id>`                | Stop container          |
+| Remove container | `docker rm <id>`                  | Delete container        |
+| Remove image     | `docker rmi <id>`                 | Delete image            |
+| Pull image       | `docker pull nginx`               | Download image          |
+| Push image       | `docker push user/app`            | Upload image            |
 
 ---
 
-### `CMD`
+## 💾 Docker Disk Management
 
-```dockerfile
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-➡️ Default runtime command
-
----
-
-### `ENTRYPOINT`
-
-```dockerfile
-ENTRYPOINT ["python3", "app.py"]
-```
-
-➡️ Main executable
+| Action                    | Command                    | Description             |
+| ------------------------- | -------------------------- | ----------------------- |
+| Check usage               | `docker system df`         | Disk usage summary      |
+| Remove stopped containers | `docker container prune`   | Clean unused containers |
+| Remove unused images      | `docker image prune`       | Delete dangling images  |
+| Remove everything         | `docker system prune -a`   | Clean all unused data   |
+| Remove volumes            | `docker volume prune`      | Delete unused volumes   |
+| Remove specific volume    | `docker volume rm <name>`  | Delete volume           |
+| Check disk (Linux)        | `df -h`                    | System disk usage       |
+| Find large files          | `du -sh /var/lib/docker/*` | Identify heavy data     |
 
 ---
 
-### `ENV`
-
-```dockerfile
-ENV APP_ENV=prod
-```
-
-➡️ Environment variable
-
----
-
-### `ARG`
-
-```dockerfile
-ARG VERSION=1.0
-```
-
-➡️ Build-time variable
-
----
-
-### `LABEL`
-
-```dockerfile
-LABEL maintainer="you@example.com"
-```
-
-➡️ Metadata
-
----
-
-### `USER`
-
-```dockerfile
-USER nginx
-```
-
-➡️ Run as specific user
-
----
-
-### `VOLUME`
-
-```dockerfile
-VOLUME /data
-```
-
-➡️ Persistent storage mount
-
----
-
-# 🚀 Docker Commands
-
-### Build Image
-
-```bash
-docker build -t my-app .
-```
-
-➡️ Build image
-
----
-
-### Run Container
-
-```bash
-docker run -d -p 8080:80 my-app
-```
-
-➡️ Run container
-
----
-
-### List Containers
-
-```bash
-docker ps
-```
-
-➡️ Running containers
-
----
-
-### List All
-
-```bash
-docker ps -a
-```
-
-➡️ All containers
-
----
-
-### Logs
-
-```bash
-docker logs <id>
-```
-
-➡️ View logs
-
----
-
-### Exec
-
-```bash
-docker exec -it <id> /bin/bash
-```
-
-➡️ Enter container
-
----
-
-### Stop
-
-```bash
-docker stop <id>
-```
-
-➡️ Stop container
-
----
-
-### Remove Container
-
-```bash
-docker rm <id>
-```
-
-➡️ Delete container
-
----
-
-### Remove Image
-
-```bash
-docker rmi <id>
-```
-
-➡️ Delete image
-
----
-
-### Pull Image
-
-```bash
-docker pull nginx
-```
-
-➡️ Download image
-
----
-
-### Push Image
-
-```bash
-docker push <user>/app
-```
-
-➡️ Upload image
-
----
-
-# 💾 Docker Disk Management (VERY IMPORTANT 🔥)
-
-### Check Docker Disk Usage
-
-```bash
-docker system df
-```
-
-➡️ Shows space used by images, containers, volumes
-
----
-
-### Remove Stopped Containers
-
-```bash
-docker container prune
-```
-
-➡️ Cleans unused containers
-
----
-
-### Remove Unused Images
-
-```bash
-docker image prune
-```
-
-➡️ Removes dangling images
-
----
-
-### Remove All Unused Data
-
-```bash
-docker system prune -a
-```
-
-➡️ Cleans EVERYTHING (images, containers, networks)
-
----
-
-### Remove Volumes
-
-```bash
-docker volume prune
-```
-
-➡️ Deletes unused volumes
-
----
-
-### Remove Specific Volume
-
-```bash
-docker volume rm <volume_name>
-```
-
-➡️ Deletes volume
-
----
-
-### Check Disk Space (Linux)
-
-```bash
-df -h
-```
-
-➡️ Shows system disk usage
-
----
-
-### Find Large Docker Files
-
-```bash
-du -sh /var/lib/docker/*
-```
-
-➡️ Identify disk-heavy Docker data
-
----
-
-# 📌 Example Dockerfile
+## 📌 Example Dockerfile
 
 ```dockerfile
 FROM nginx:1.29.8
@@ -366,22 +77,16 @@ COPY todo/ /usr/share/nginx/html/
 EXPOSE 80
 ```
 
-➡️ Simple static website hosting
-
 ---
 
-# 🧠 Pro Tips
+## 🧠 Pro Tips
 
-* Use `.dockerignore` to reduce build size
-* Prefer `COPY` over `ADD`
-* Use slim/alpine images
-* Regularly run `docker system prune`
-* Avoid running containers as root
-
----
-
-# 👩‍💻 Author
-
-Pratyusha
+| Tip                 | Description       |
+| ------------------- | ----------------- |
+| Use `.dockerignore` | Reduce image size |
+| Prefer COPY         | Safer than ADD    |
+| Use slim images     | Smaller builds    |
+| Prune regularly     | Avoid disk issues |
+| Avoid root user     | Better security   |
 
 ---
