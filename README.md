@@ -1,4 +1,4 @@
-# 🐳 Docker Cheat Sheet (Table Format)
+# 🐳 Docker Cheat Sheet
 
 ---
 
