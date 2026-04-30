@@ -12,29 +12,14 @@ resource "aws_instance" "docker_ec2_instance" {
     Environment = "Development"
   }
   )
-  connection { #this is required to connect while remote-exec to install docker
-    type     = "ssh"
-    user     = "ec2-user"
-    password = "DevOps321"
-    host     = output.aws_instance_public_ip.value
-  }
-
-  provisioner "remote-exec" {
-    inline = [ 
-        "sudo yum update -y",
-        "sudo yum install -y docker",
-        "sudo systemctl start docker",
-        "sudo systemctl enable docker",
-        "sudo usermod -aG docker $USER"
-     ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [ 
-        "sudo systemctl stop docker"
-     ]
-    when = destroy
-  }
+    user_data = <<-EOF
+              #!/bin/bash
+              sudo dnf update -y
+              sudo dnf install -y docker
+              sudo systemctl start docker
+              sudo systemctl enable docker
+              sudo usermod -aG docker $ec2-user
+            EOF
 }
 resource "aws_security_group" "allow_all" {
     name        = "allow_all_docker_ec2_sg"
